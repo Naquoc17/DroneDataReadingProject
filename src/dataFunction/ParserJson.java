@@ -56,8 +56,33 @@ public class ParserJson
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("test: " + droneDynamicsList);
+        System.out.println("parseJsonToDroneDynamics successful");
         return droneDynamicsList;
+    }
+
+    public static List<DroneTypes> parseJsonToDroneTypes(String jsonData){
+        List<DroneTypes> droneTypesList = new ArrayList<>();
+        try{
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                DroneTypes droneTypes = new DroneTypes(
+                        jsonObject.getInt("control_range"),
+                        jsonObject.getInt("max_carriage"),
+                        jsonObject.getInt("weight"),
+                        jsonObject.getInt("max_speed"),
+                        jsonObject.getInt("id"),
+                        jsonObject.getInt("battery_capacity"),
+                        jsonObject.getString("typename"),
+                        jsonObject.getString("manufacturer")
+                );
+                droneTypesList.add(droneTypes);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("parseJsonToDroneTypes successful");
+        return droneTypesList;
     }
 
 }

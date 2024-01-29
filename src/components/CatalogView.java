@@ -2,6 +2,9 @@ package components;
 
 import dataFunction.DroneData;
 import dataFunction.ParserJson;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.*;
@@ -10,11 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 public class CatalogView extends JPanel {
-
     private JTable table;
-    /**
-     * Create the panel.
-     */
+
     public CatalogView(String jsonDroneData) {
 
         setBackground(new Color(244, 244, 244));
@@ -22,13 +22,8 @@ public class CatalogView extends JPanel {
 
         String[] columns = {"ID", "DroneType", "Created", "Serialnumber", "Carriage Weight", "Carriage Type"};
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
-;
+        ;
         // ======== Push data =========== //
-//        Object[][] data = {
-//                {"testID", "testDroneType", "12/31/2022", 2347652, 43.8, "testType"},
-//                {"testID", "testDroneType", "12/31/2022", 2347652, 43.8, "testType"},
-//                {"testID", "testDroneType", "12/31/2022", 2347652, 43.8, "testType"}
-//        }; //TODO data hinzufuegen
         List<DroneData> droneDataList = ParserJson.parseJsonToDroneData(jsonDroneData);
         for (DroneData drone : droneDataList){
             Object[] row = new Object[]{
@@ -41,15 +36,26 @@ public class CatalogView extends JPanel {
             };
             tableModel.addRow(row);
         }
-
-
-//        table = new JTable(data, columns);
         table = new JTable(tableModel);
         table.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
         table.setBackground(new Color(255, 255, 255));
         table.setRowSelectionAllowed(true);
         table.setBounds(187, 0, 1086, 639);
         add(table);
+        //click event
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e)) { // click
+                    JTable target = (JTable)e.getSource();
+                    int row = target.getSelectedRow();
+                    int column = target.getSelectedColumn();
+                    //Getting data from the selected cell
+                    Object value = target.getValueAt(row, column);
+                    //Open a new window with information about the selected object
+                    new InfoWindow();
+                }
+            }
+        });
 
         // Customizing column header appearance
         JTableHeader tableHeader = table.getTableHeader();

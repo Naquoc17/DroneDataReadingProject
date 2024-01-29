@@ -9,7 +9,7 @@ public class TopMenu extends JPanel
 {
     private JLabel jLAdmin;
     private JButton menuButton;
-    private JPanel currentPanel; // ?
+    private JPanel currentPanel;
     private SideMenu sideMenu;
     private MainWindow mainWindow;
 
@@ -22,7 +22,7 @@ public class TopMenu extends JPanel
         this.mainWindow = _mainWindow;
         //create Top Panel
         setBackground(new Color(0, 0, 0));
-        setBounds(0, 0, 1306, 49);
+        setBounds(0, 0, 1750, 49);
         setLayout(new BorderLayout(0, 0));
         //create MENU Button
         menuButton = new JButton("");
