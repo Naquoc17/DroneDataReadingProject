@@ -13,11 +13,35 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class TestJson {
-    public String returnDroneData(String input){
+    public String urlDataNextPage(String input) {
+        JSONObject wholeFile = new JSONObject(input);
+        String urlDataNextPage = wholeFile.optString("next");
+        return urlDataNextPage;
+    }
+
+    public String jsonObjectMerge(String jsonString1, String jsonString2){
+        JSONArray jsonArray1 = new JSONArray(jsonString1);
+        JSONArray jsonArray2 = new JSONArray(jsonString2);
+
+        JSONArray mergedArray = new JSONArray();
+
+        for (int i = 0; i < jsonArray1.length(); i++){
+            mergedArray.put(jsonArray1.getJSONObject(i));
+        }
+        for (int i = 0; i < jsonArray2.length(); i++){
+            mergedArray.put(jsonArray2.getJSONObject(i));
+        }
+
+        String mergedJsonStr = mergedArray.toString();
+        return mergedJsonStr;
+    }
+
+    public String returnDroneData(String input) {
         JSONObject wholeFile = new JSONObject(input);
         JSONArray jsonFile = wholeFile.getJSONArray("results");
         return jsonFile.toString();
     }
+
     public static void test(String input) {
         JSONObject wholeFile = new JSONObject(input);
         JSONArray jsonFile = wholeFile.getJSONArray("results");
@@ -49,45 +73,51 @@ public class TestJson {
     }
 
 
-
     public String fetchJsonData(String urlToConect) {
         Dotenv dotenv = Dotenv.configure().load();
         String user_agent = dotenv.get("USER_AGENT");
-        String endpoint = dotenv.get(urlToConect);
+        String urlToConnect = dotenv.get(urlToConect);
         String token = dotenv.get("TOKEN");
         System.out.println("Starting getting data from the API...");
 
-        String jsonData = "";
+        String jsonData = "[]";
         URL url;
+        int page = 0;
+        while (!urlToConnect.isEmpty() && page < 50 ) {
+            try {
+                url = new URL(urlToConnect);
 
-        try {
-            url = new URL(endpoint);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Authorization", token);
+                connection.setRequestProperty("User-Agent", user_agent);
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Authorization", token);
-            connection.setRequestProperty("User-Agent", user_agent);
+                int responseCode = connection.getResponseCode();
+                System.out.println("Response Code " + responseCode);
 
-            int responseCode = connection.getResponseCode();
-            System.out.println("Response Code " + responseCode);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                String jsonResponse = response.toString();
+                System.out.println("Connection succesfull: " + urlToConect);
+                System.out.println("Page " + page + " " + jsonResponse);
+                jsonData = jsonObjectMerge(jsonData, returnDroneData(jsonResponse));
+                urlToConnect = urlDataNextPage(jsonResponse);
+                page++;
+            } catch (MalformedURLException e) {
+                System.err.println("Malformed URL: " + e.getLocalizedMessage());
+                e.printStackTrace();
+            } catch (IOException e) {
+                System.out.println("General IO Exception: " + e.getLocalizedMessage());
+                e.printStackTrace();
             }
-            in.close();
-            String jsonResponse = response.toString();
-            System.out.println("Connection succesfull");
-            jsonData = returnDroneData(jsonResponse);
-        } catch (MalformedURLException e) {
-            System.err.println("Malformed URL: " + e.getLocalizedMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("General IO Exception: " + e.getLocalizedMessage());
-            e.printStackTrace();
+
         }
+        System.out.println("Merge Data: " + jsonData);
         return jsonData;
     }
 }
