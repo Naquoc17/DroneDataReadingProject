@@ -83,7 +83,7 @@ public class TestJson {
         String jsonData = "[]";
         URL url;
         int page = 0;
-        while (!urlToConnect.isEmpty() && page < 50 ) {
+        while (!urlToConnect.isEmpty() && page < 1 ) {
             try {
                 url = new URL(urlToConnect);
 

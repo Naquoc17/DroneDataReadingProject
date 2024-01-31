@@ -50,18 +50,19 @@ public class DroneDynamicsView extends JPanel {
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e)) { // click
+                if (e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e)) {
                     JTable target = (JTable)e.getSource();
                     int row = target.getSelectedRow();
-                    int column = target.getSelectedColumn();
-                    //Getting data from the selected cell
-                    Object value = target.getValueAt(row, column);
-                    //Open a new window with information about the selected object
-                    new InfoWindow();
+                    // Getting data from the selected row
+                    Object[] rowData = new Object[table.getColumnCount()];
+                    for (int i = 0; i < rowData.length; i++) {
+                        rowData[i] = target.getValueAt(row, i);
+                    }
+                    // Open a new window with information about the selected drone
+                    new InfoDroneDynamics(rowData);
                 }
             }
         });
-
         // Customizing column header appearance
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setBackground(Color.LIGHT_GRAY); // Header background color

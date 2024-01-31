@@ -1,17 +1,19 @@
 package app;
 
 import javax.swing.*;
+import javax.swing.text.View;
+
 import components.*;
 import java.awt.*;
 
-public class MainWindow extends JFrame
-{
+public class MainWindow extends JFrame {
     private static JPanel mainPane;
     private static JPanel contentPane;
     private static JPanel catalogView;
     private static TopMenu topMenu;
-    private static JPanel droneDynamics;
-    private static JPanel droneTypes;
+    private static JPanel droneDynamicsView;
+
+    private static DroneTypesView droneTypesView;
 
     public MainWindow(String jsonDroneData, String jsonDroneDynamics, String jsonDroneTypes)
     {
@@ -64,8 +66,8 @@ public class MainWindow extends JFrame
         mainPane.add(JLabel_Autors5);
 
         catalogView = new CatalogView(jsonDroneData);
-        droneDynamics = new DroneDynamicsView(jsonDroneDynamics);
-        droneTypes = new DroneTypesView(jsonDroneTypes);
+        droneDynamicsView = new DroneDynamicsView(jsonDroneDynamics);
+        droneTypesView = new DroneTypesView(jsonDroneTypes);
 
         topMenu = new TopMenu(this);
         topMenu.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -77,6 +79,36 @@ public class MainWindow extends JFrame
         contentPane.add(topMenu);
         contentPane.add(mainPane);
     }
+
+//    public void loadData(){
+//        TestJson droneData = new TestJson();
+//        String jsonDroneData = droneData.fetchJsonData("ENDPOINT_DRONES");
+//        String jsonDroneDynamics = droneData.fetchJsonData("ENDPOINT_DRONEDYNAMICS");
+//        String jsonDroneTypes = droneData.fetchJsonData("ENDPOINT_DRONETYPES");
+//        System.out.println("Reloaded DroneAPI: " + jsonDroneData);
+//        System.out.println("Reloaded DroneDynamics: " + jsonDroneDynamics);
+//        System.out.println("Reloaded DroneDynamics: " + jsonDroneTypes);
+//    }
+
+    // ======== Test Loading Button ============ //
+    public void loadData(){
+        TestJson droneData = new TestJson();
+        String jsonDroneData = droneData.fetchJsonData("NEXT_PAGE_DRONES");
+        String jsonDroneDynamics = droneData.fetchJsonData("NEXT_PAGE_DRONEDYNAMICS");
+        String jsonDroneTypes = droneData.fetchJsonData("NEXT_PAGE_DRONETYPES");
+        System.out.println("Reloaded DroneAPI: " + jsonDroneData);
+        System.out.println("Reloaded DroneDynamics: " + jsonDroneDynamics);
+        System.out.println("Reloaded DroneDynamics: " + jsonDroneTypes);
+
+//        catalogView.updateView(jsonDroneData);
+//        droneDynamics.updateView(jsonDroneDynamics);
+        droneTypesView.updateView(jsonDroneTypes);
+
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
+
     public JPanel getCurrentPane() {return (JPanel) contentPane.getComponent(1);} //get the current content panel, (main panel)
     public void changeContentPane(int panelNr) {
         contentPane.remove(1);
@@ -90,11 +122,11 @@ public class MainWindow extends JFrame
                 break;
 
             case 3:
-                contentPane.add(droneDynamics);
+                contentPane.add(droneDynamicsView);
                 break;
 
             case 4:
-                contentPane.add(droneTypes);
+                contentPane.add(droneTypesView);
                 break;
 
             default:

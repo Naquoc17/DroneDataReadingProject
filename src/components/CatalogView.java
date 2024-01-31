@@ -22,7 +22,6 @@ public class CatalogView extends JPanel {
 
         String[] columns = {"ID", "DroneType", "Created", "Serialnumber", "Carriage Weight", "Carriage Type"};
         DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
-        ;
         // ======== Push data =========== //
         List<DroneData> droneDataList = ParserJson.parseJsonToDroneData(jsonDroneData);
         for (DroneData drone : droneDataList){
@@ -50,9 +49,12 @@ public class CatalogView extends JPanel {
                     int row = target.getSelectedRow();
                     int column = target.getSelectedColumn();
                     //Getting data from the selected cell
-                    Object value = target.getValueAt(row, column);
+                    Object[] rowData = new Object[table.getColumnCount()];
+                    for (int i = 0; i < rowData.length; i++) {
+                        rowData[i] = target.getValueAt(row, i);
+                    }
                     //Open a new window with information about the selected object
-                    new InfoWindow();
+                    new InfoDroneData(rowData);
                 }
             }
         });

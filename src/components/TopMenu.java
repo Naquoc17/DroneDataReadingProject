@@ -9,6 +9,7 @@ public class TopMenu extends JPanel
 {
     private JLabel jLAdmin;
     private JButton menuButton;
+    private JButton refreshButton;
     private JPanel currentPanel;
     private SideMenu sideMenu;
     private MainWindow mainWindow;
@@ -58,17 +59,30 @@ public class TopMenu extends JPanel
         menuButton.setIcon(IconMenu);
 
         sideMenu = new SideMenu(mainWindow);
-        //create label Icon Admin
-        JLabel JIconAdmin = new JLabel("");
-        ImageIcon Icon2 = new ImageIcon(MainWindow.class.getResource("/icons/Froyoshark-Enkel-ITerm.32.png"));
-        JIconAdmin.setIcon(Icon2);
-        add(JIconAdmin, BorderLayout.EAST);
+
+        refreshButton = new JButton("");
+        refreshButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //make a transparent button
+        refreshButton.setOpaque(false);                 //make a component transparent if false
+        refreshButton.setContentAreaFilled(false);                 // Removes background fill
+        refreshButton.setBorderPainted(false);                     // Removes the button border
+        refreshButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Data Updated");
+                mainWindow.loadData();
+                //TODO refresh func
+            }
+        });
+        refreshButton.setBackground(Color.BLACK);
+        add(refreshButton, BorderLayout.EAST);
+        ImageIcon IconRefresh = new ImageIcon(MainWindow.class.getResource("/icons/Hopstarter-Soft-Scraps-Button-Refresh.32.png"));
+        refreshButton.setIcon(IconRefresh);
 
         //create label Hello Admin
         jLAdmin = new JLabel("Hello, Admin");
         jLAdmin.setAlignmentX(Component.CENTER_ALIGNMENT);
         jLAdmin.setForeground(new Color(254, 254, 254));
         jLAdmin.setFont(new Font("Malayalam MN", Font.PLAIN, 11));
-        add(jLAdmin, BorderLayout.CENTER);                 //add label to the top panel
+        add(jLAdmin, BorderLayout.CENTER);
     }
 }
