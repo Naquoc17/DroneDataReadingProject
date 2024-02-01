@@ -27,7 +27,7 @@ public class ParserJson
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("ParserJsonToDroneData successful");
+//        System.out.println("ParserJsonToDroneData successful");
         return droneDataList;
     }
 
@@ -56,7 +56,7 @@ public class ParserJson
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("parseJsonToDroneDynamics successful");
+//        System.out.println("parseJsonToDroneDynamics successful");
         return droneDynamicsList;
     }
 
@@ -81,7 +81,7 @@ public class ParserJson
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("parseJsonToDroneTypes successful");
+//        System.out.println("parseJsonToDroneTypes successful");
         return droneTypesList;
     }
 

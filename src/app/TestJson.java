@@ -78,7 +78,7 @@ public class TestJson {
         String user_agent = dotenv.get("USER_AGENT");
         String urlToConnect = dotenv.get(urlToConect);
         String token = dotenv.get("TOKEN");
-        System.out.println("Starting getting data from the API...");
+        System.out.println("Starting getting data from the API: " + urlToConect);
 
         String jsonData = "[]";
         URL url;
@@ -92,8 +92,8 @@ public class TestJson {
                 connection.setRequestProperty("Authorization", token);
                 connection.setRequestProperty("User-Agent", user_agent);
 
-                int responseCode = connection.getResponseCode();
-                System.out.println("Response Code " + responseCode);
+//                int responseCode = connection.getResponseCode();
+//                System.out.println("Response Code " + responseCode);
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String inputLine;
@@ -103,8 +103,8 @@ public class TestJson {
                 }
                 in.close();
                 String jsonResponse = response.toString();
-                System.out.println("Connection succesfull: " + urlToConect);
-                System.out.println("Page " + page + " " + jsonResponse);
+//                System.out.println("Connection succesfull: " + urlToConect);
+                System.out.println("\tPage " + page + " " + jsonResponse);
                 jsonData = jsonObjectMerge(jsonData, returnDroneData(jsonResponse));
                 urlToConnect = urlDataNextPage(jsonResponse);
                 page++;
@@ -117,7 +117,7 @@ public class TestJson {
             }
 
         }
-        System.out.println("Merge Data: " + jsonData);
+        System.out.println("\t\tMerge Data: " + jsonData);
         return jsonData;
     }
 }

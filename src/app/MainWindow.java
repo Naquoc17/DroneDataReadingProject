@@ -22,6 +22,8 @@ public class MainWindow extends JFrame {
 
     public MainWindow() {
         loadData();
+        System.out.println("\n\n\t\t\t\t\t\t\t\t\t\t=================== Data loaded ===================");
+        System.out.println("\t\t\t\t\t\t\t\t\t\t=================== Application is ready ==========\n");
         contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setMinimumSize(new Dimension(0, 0));
@@ -101,6 +103,7 @@ public class MainWindow extends JFrame {
 
         contentPane.revalidate();
         contentPane.repaint();
+        System.out.println("\n\n\t\t\t\t\t\t\t\t\t\t=================== Data reloaded ===================");
     }
 
 
