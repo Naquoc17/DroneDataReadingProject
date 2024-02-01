@@ -20,7 +20,6 @@ public class MainWindow extends JFrame {
     private String jsonDroneTypes;
     private String jsonDroneDynamics;
 
-//    public MainWindow(String jsonDroneData, String jsonDroneDynamics, String jsonDroneTypes) {
     public MainWindow() {
         loadData();
         contentPane = new JPanel();
@@ -92,16 +91,9 @@ public class MainWindow extends JFrame {
         this.jsonDroneDynamics = droneData.fetchJsonData("ENDPOINT_DRONEDYNAMICS");
         this.jsonDroneTypes = droneData.fetchJsonData("ENDPOINT_DRONETYPES");
     }
-    public void testLoadData(){
-        TestJson droneData = new TestJson();
-        this.jsonDroneData = droneData.fetchJsonData("NEXT_PAGE_DRONES");
-        this.jsonDroneDynamics = droneData.fetchJsonData("NEXT_PAGE_DRONEDYNAMICS");
-        this.jsonDroneTypes = droneData.fetchJsonData("NEXT_PAGE_DRONETYPES");
-    }
 
     public void reloadData() {
-        testLoadData();
-//        loadData();
+        loadData();
 
         //        catalogView.updateView(jsonDroneData);
         //        droneDynamics.updateView(jsonDroneDynamics);
