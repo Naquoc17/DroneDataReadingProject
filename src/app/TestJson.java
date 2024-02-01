@@ -78,7 +78,7 @@ public class TestJson {
         String user_agent = dotenv.get("USER_AGENT");
         String urlToConnect = dotenv.get(urlToConect);
         String token = dotenv.get("TOKEN");
-        System.out.println("Starting getting data from the API: " + urlToConect);
+        System.out.println("\nStarting getting data from the API: " + urlToConect);
 
         String jsonData = "[]";
         URL url;
@@ -104,7 +104,7 @@ public class TestJson {
                 in.close();
                 String jsonResponse = response.toString();
 //                System.out.println("Connection succesfull: " + urlToConect);
-                System.out.println("\tPage " + page + " " + jsonResponse);
+                System.out.println("\t└── Page " + page + " " + jsonResponse);
                 jsonData = jsonObjectMerge(jsonData, returnDroneData(jsonResponse));
                 urlToConnect = urlDataNextPage(jsonResponse);
                 page++;
@@ -117,7 +117,7 @@ public class TestJson {
             }
 
         }
-        System.out.println("\t\tMerge Data: " + jsonData);
+        System.out.println("\t\t└── Merge Data: " + jsonData);
         return jsonData;
     }
 }
