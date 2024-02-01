@@ -68,8 +68,8 @@ public class TopMenu extends JPanel
         refreshButton.setBorderPainted(false);                     // Removes the button border
         refreshButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Data Updated");
-                mainWindow.loadData();
+                System.out.println("Data reloaded");
+                mainWindow.reloadData();
                 //TODO refresh func
             }
         });
