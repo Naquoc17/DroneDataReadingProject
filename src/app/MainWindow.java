@@ -1,11 +1,12 @@
 package app;
 
 import javax.swing.*;
-import javax.swing.text.View;
-
-import components.*;
-
+import components.table.overview.CatalogView;
+import components.table.overview.DroneDynamicsView;
+import components.table.overview.DroneTypesView;
+import components.table.overview.TopMenu;
 import java.awt.*;
+
 
 public class MainWindow extends JFrame {
     private static JPanel mainPane;
@@ -14,6 +15,7 @@ public class MainWindow extends JFrame {
     private static JPanel catalogView;
     private static JPanel droneDynamicsView;
     private static DroneTypesView droneTypesView;
+
 
     // json Variable
     private String jsonDroneData;
@@ -75,6 +77,7 @@ public class MainWindow extends JFrame {
         catalogView = new CatalogView(jsonDroneData);
         droneDynamicsView = new DroneDynamicsView(jsonDroneDynamics);
         droneTypesView = new DroneTypesView(jsonDroneTypes);
+
 
         topMenu = new TopMenu(this);
         topMenu.setAlignmentY(Component.TOP_ALIGNMENT);

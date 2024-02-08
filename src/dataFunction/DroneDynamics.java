@@ -15,6 +15,8 @@ public class DroneDynamics {
     private ZonedDateTime lastSeen;
     private String status;
 
+
+
     // Constructor
 
 
