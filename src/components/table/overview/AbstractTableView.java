@@ -8,11 +8,16 @@ import java.awt.*;
 public abstract class AbstractTableView extends JPanel {
     protected JTable table;
     protected DefaultTableModel tableModel;
-//    protected abstract void AbstractTableView(String jsonData){
-//
-//    }
+    public AbstractTableView(String jsonData){
+        tableModel = new DefaultTableModel(getColumnNames(), 0);
+        loadDataToTable(jsonData);
+        initTable();
+    }
+    protected abstract String[] getColumnNames();
 
     protected void initTable(){
+        setBackground(Color.WHITE);
+        setLayout(null);
         table = new JTable(tableModel);
         table.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
         table.setBackground(Color.WHITE);
@@ -35,9 +40,7 @@ public abstract class AbstractTableView extends JPanel {
 
     protected abstract void loadDataToTable(String jsonData);
 
-    protected abstract String[] getColumnNames();
-
-    protected void updateView(String jsonData){
+    public void updateView(String jsonData){
         loadDataToTable(jsonData);
     }
 }
