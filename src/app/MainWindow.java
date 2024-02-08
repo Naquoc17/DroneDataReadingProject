@@ -1,7 +1,7 @@
 package app;
 
 import javax.swing.*;
-import components.table.overview.CatalogView;
+import components.table.overview.DronesView;
 import components.table.overview.DroneDynamicsView;
 import components.table.overview.DroneTypesView;
 import components.table.overview.TopMenu;
@@ -12,8 +12,8 @@ public class MainWindow extends JFrame {
     private static JPanel mainPane;
     private static JPanel contentPane;
     private static TopMenu topMenu;
-    private static JPanel catalogView;
-    private static JPanel droneDynamicsView;
+    private static DronesView dronesView;
+    private static DroneDynamicsView droneDynamicsView;
     private static DroneTypesView droneTypesView;
 
 
@@ -74,7 +74,7 @@ public class MainWindow extends JFrame {
         JLabel_Autors5.setBounds(950, 185, 261, 30);
         mainPane.add(JLabel_Autors5);
 
-        catalogView = new CatalogView(jsonDroneData);
+        dronesView = new DronesView(jsonDroneData);
         droneDynamicsView = new DroneDynamicsView(jsonDroneDynamics);
         droneTypesView = new DroneTypesView(jsonDroneTypes);
 
@@ -122,7 +122,7 @@ public class MainWindow extends JFrame {
                 break;
 
             case 2:
-                contentPane.add(catalogView);
+                contentPane.add(dronesView);
                 break;
 
             case 3:

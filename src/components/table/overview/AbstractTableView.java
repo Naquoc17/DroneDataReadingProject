@@ -40,6 +40,8 @@ public abstract class AbstractTableView extends JPanel {
 
     protected abstract void loadDataToTable(String jsonData);
 
+
+
     public void updateView(String jsonData){
         loadDataToTable(jsonData);
     }
