@@ -6,6 +6,7 @@ import components.table.overview.DroneDynamicsView;
 import components.table.overview.DroneTypesView;
 import components.table.overview.TopMenu;
 import java.awt.*;
+import java.io.File;
 
 
 public class MainWindow extends JFrame {
@@ -15,6 +16,7 @@ public class MainWindow extends JFrame {
     private static DronesView dronesView;
     private static DroneDynamicsView droneDynamicsView;
     private static DroneTypesView droneTypesView;
+    private static TestJson droneData = new TestJson();
 
 
     // json Variable
@@ -22,10 +24,34 @@ public class MainWindow extends JFrame {
     private String jsonDroneTypes;
     private String jsonDroneDynamics;
 
+
     public MainWindow() {
-        loadData();
-        System.out.println("\n\n\t\t\t\t\t\t\t\t\t\t=================== Data loaded ===================");
-        System.out.println("\t\t\t\t\t\t\t\t\t\t=================== Application is ready ==========\n");
+        try{
+            if(!checkEnvFileExistence()){
+                throw new MissingEnvFileException();
+            }
+
+
+            loadShortJsonData();
+            System.out.println("\n\n\t\t\t\t\t\t\t\t\t\t=================== Data loaded ===================");
+            System.out.println("\t\t\t\t\t\t\t\t\t\t=================== Application is ready ==========\n");
+
+            initializeUI();
+            teammemberLabels();
+
+            UpdateUIThread updateUIRunnable = new UpdateUIThread();
+            Thread updateUIThread = new Thread(updateUIRunnable);
+            updateUIThread.start();
+
+//        } catch (InterruptedException e){
+//            e.printStackTrace();
+        } catch (MissingEnvFileException e){
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    private void initializeUI(){
         contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setMinimumSize(new Dimension(0, 0));
@@ -44,36 +70,6 @@ public class MainWindow extends JFrame {
         JDroneLabel.setBounds(400, 78, 439, 250);
         mainPane.add(JDroneLabel);
 
-        JLabel JLabel_Group = new JLabel("GROUP 5");
-        JLabel_Group.setFont(new Font("Malayalam MN", Font.PLAIN, 20));
-        JLabel_Group.setBounds(950, 78, 261, 30);
-        mainPane.add(JLabel_Group);
-
-        JLabel JLabel_Autors = new JLabel("Created by:");
-        JLabel_Autors.setFont(new Font("Malayalam MN", Font.PLAIN, 15));
-        JLabel_Autors.setBounds(950, 110, 261, 30);
-        mainPane.add(JLabel_Autors);
-        JLabel JLabel_Autors1 = new JLabel("Tuan Dung Pham");
-        JLabel_Autors1.setFont(new Font("Malayalam MN", Font.PLAIN, 12));
-        JLabel_Autors1.setBounds(950, 125, 261, 30);
-        mainPane.add(JLabel_Autors1);
-        JLabel JLabel_Autors2 = new JLabel("Zaynab Elyan");
-        JLabel_Autors2.setFont(new Font("Malayalam MN", Font.PLAIN, 12));
-        JLabel_Autors2.setBounds(950, 140, 261, 30);
-        mainPane.add(JLabel_Autors2);
-        JLabel JLabel_Autors3 = new JLabel("Anh Quoc Nguyen");
-        JLabel_Autors3.setFont(new Font("Malayalam MN", Font.PLAIN, 12));
-        JLabel_Autors3.setBounds(950, 155, 261, 30);
-        mainPane.add(JLabel_Autors3);
-        JLabel JLabel_Autors4 = new JLabel("Iryna Vynarchuk");
-        JLabel_Autors4.setFont(new Font("Malayalam MN", Font.PLAIN, 12));
-        JLabel_Autors4.setBounds(950, 170, 261, 30);
-        mainPane.add(JLabel_Autors4);
-        JLabel JLabel_Autors5 = new JLabel("Sina (Theo) Adam");
-        JLabel_Autors5.setFont(new Font("Malayalam MN", Font.PLAIN, 12));
-        JLabel_Autors5.setBounds(950, 185, 261, 30);
-        mainPane.add(JLabel_Autors5);
-
         dronesView = new DronesView(jsonDroneData);
         droneDynamicsView = new DroneDynamicsView(jsonDroneDynamics);
         droneTypesView = new DroneTypesView(jsonDroneTypes);
@@ -88,20 +84,51 @@ public class MainWindow extends JFrame {
         //the order of addition in BoxLayout
         contentPane.add(topMenu);
         contentPane.add(mainPane);
+
+        setVisible(true);
+        setLocationRelativeTo(null);
+        setTitle("Java Application with Drone Simulation Interface");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 1380, 820);
     }
 
+    private void teammemberLabels(){
+        String[] authors = {"Anh Quoc Nguyen", "Tuan Dung Pham", "Zaynab Elyan", "Iryna Vynarchuk", "Sina (Theo) Adam"};
+
+        JLabel JLabel_Group = new JLabel("GROUP 5");
+        JLabel_Group.setFont(new Font("Malayalam MN", Font.PLAIN, 20));
+        JLabel_Group.setBounds(950, 78, 261, 30);
+        mainPane.add(JLabel_Group);
+
+        JLabel JLabel_Autors = new JLabel("Created by:");
+        JLabel_Autors.setFont(new Font("Malayalam MN", Font.PLAIN, 15));
+        JLabel_Autors.setBounds(950, 110, 261, 30);
+        mainPane.add(JLabel_Autors);
+
+        int y = 125;
+        for (String author : authors){
+            JLabel authorLabel = new JLabel(author);
+            authorLabel.setFont(new Font("Malayalam MN", Font.PLAIN, 12));
+            authorLabel.setBounds(950, y, 261, 30);
+            mainPane.add(authorLabel);
+            y += 15;
+        }
+    }
+
+    public void loadShortJsonData(){
+        this.jsonDroneData = droneData.fetchJsonData("ENDPOINT_DRONES", 5);
+        this.jsonDroneDynamics = droneData.fetchJsonData("ENDPOINT_DRONEDYNAMICS", 5);
+        this.jsonDroneTypes = droneData.fetchJsonData("ENDPOINT_DRONETYPES", 5);
+    }
     public void loadData(){
-        TestJson droneData = new TestJson();
         this.jsonDroneData = droneData.fetchJsonData("ENDPOINT_DRONES");
         this.jsonDroneDynamics = droneData.fetchJsonData("ENDPOINT_DRONEDYNAMICS");
         this.jsonDroneTypes = droneData.fetchJsonData("ENDPOINT_DRONETYPES");
     }
 
-    public void reloadData() {
-        loadData();
-
-        //        catalogView.updateView(jsonDroneData);
-        //        droneDynamics.updateView(jsonDroneDynamics);
+    public void updateUI() {
+        dronesView.updateView(jsonDroneData);
+        droneDynamicsView.updateView(jsonDroneDynamics);
         droneTypesView.updateView(jsonDroneTypes);
 
         contentPane.revalidate();
@@ -145,13 +172,24 @@ public class MainWindow extends JFrame {
         //test System.out.println("change window");
     }
 
-    public static void main(String[] args) {
-        MainWindow frame = new MainWindow();
-        frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
-        frame.setTitle("Java Application with Drone Simulation Interface");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setBounds(100, 100, 1380, 820);
+    private boolean checkEnvFileExistence(){
+        File envFile = new File(".env");
+        return envFile.exists();
     }
 
+    class UpdateUIThread implements Runnable {
+        @Override
+        public void run() {
+            while(true){
+                try{
+//                    Thread.sleep(60000);
+                    Thread.sleep(5000);
+                    loadData();
+                    updateUI();
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

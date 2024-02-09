@@ -67,7 +67,9 @@ public class ParserJson
             for (int i = 0; i < jsonArray.length(); i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 DroneTypes droneTypes = new DroneTypes(
-                        jsonObject.getInt("control_range"),
+                        jsonObject.
+
+                                getInt("control_range"),
                         jsonObject.getInt("max_carriage"),
                         jsonObject.getInt("weight"),
                         jsonObject.getInt("max_speed"),

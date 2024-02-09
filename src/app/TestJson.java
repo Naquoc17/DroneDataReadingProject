@@ -11,6 +11,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TestJson {
     public String urlDataNextPage(String input) {
@@ -72,8 +77,11 @@ public class TestJson {
         }
     }
 
+    public String fetchJsonData(String urlToConnect){
+        return fetchJsonData(urlToConnect, 100);
+    }
 
-    public String fetchJsonData(String urlToConect) {
+    public String fetchJsonData(String urlToConect, int pageLimit) {
         Dotenv dotenv = Dotenv.configure().load();
         String user_agent = dotenv.get("USER_AGENT");
         String urlToConnect = dotenv.get(urlToConect);
@@ -83,7 +91,7 @@ public class TestJson {
         String jsonData = "[]";
         URL url;
         int page = 0;
-        while (!urlToConnect.isEmpty() && page < 15 ) {
+        while (!urlToConnect.isEmpty() && page < pageLimit ) {
             try {
                 url = new URL(urlToConnect);
 
