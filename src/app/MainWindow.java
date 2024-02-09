@@ -1,10 +1,12 @@
 package app;
 
 import javax.swing.*;
+
 import components.table.overview.DronesView;
 import components.table.overview.DroneDynamicsView;
 import components.table.overview.DroneTypesView;
 import components.table.overview.TopMenu;
+
 import java.awt.*;
 import java.io.File;
 
@@ -16,7 +18,10 @@ public class MainWindow extends JFrame {
     private static DronesView dronesView;
     private static DroneDynamicsView droneDynamicsView;
     private static DroneTypesView droneTypesView;
+
+    // dataload variable
     private static TestJson droneData = new TestJson();
+    private int pageLimit = 5;
 
 
     // json Variable
@@ -26,32 +31,28 @@ public class MainWindow extends JFrame {
 
 
     public MainWindow() {
-        try{
-            if(!checkEnvFileExistence()){
+        try {
+            if (!checkEnvFileExistence()) {
                 throw new MissingEnvFileException();
             }
 
+            for (int i = 0; i < 2; i++) {
+                loadData();
+                System.out.println("\n\n\t\t\t\t\t\t\t\t\t\t=================== Data loaded ===================");
+                System.out.println("\t\t\t\t\t\t\t\t\t\t=================== Application is ready ==========\n");
+                initializeUI();
+                teammemberLabels();
+            }
 
-            loadShortJsonData();
-            System.out.println("\n\n\t\t\t\t\t\t\t\t\t\t=================== Data loaded ===================");
-            System.out.println("\t\t\t\t\t\t\t\t\t\t=================== Application is ready ==========\n");
+            runUIThread();
 
-            initializeUI();
-            teammemberLabels();
-
-            UpdateUIThread updateUIRunnable = new UpdateUIThread();
-            Thread updateUIThread = new Thread(updateUIRunnable);
-            updateUIThread.start();
-
-//        } catch (InterruptedException e){
-//            e.printStackTrace();
-        } catch (MissingEnvFileException e){
+        } catch (MissingEnvFileException e) {
             System.err.println(e.getMessage());
             System.exit(1);
         }
     }
 
-    private void initializeUI(){
+    private void initializeUI() {
         contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setMinimumSize(new Dimension(0, 0));
@@ -92,7 +93,7 @@ public class MainWindow extends JFrame {
         setBounds(100, 100, 1380, 820);
     }
 
-    private void teammemberLabels(){
+    private void teammemberLabels() {
         String[] authors = {"Anh Quoc Nguyen", "Tuan Dung Pham", "Zaynab Elyan", "Iryna Vynarchuk", "Sina (Theo) Adam"};
 
         JLabel JLabel_Group = new JLabel("GROUP 5");
@@ -106,7 +107,7 @@ public class MainWindow extends JFrame {
         mainPane.add(JLabel_Autors);
 
         int y = 125;
-        for (String author : authors){
+        for (String author : authors) {
             JLabel authorLabel = new JLabel(author);
             authorLabel.setFont(new Font("Malayalam MN", Font.PLAIN, 12));
             authorLabel.setBounds(950, y, 261, 30);
@@ -115,15 +116,12 @@ public class MainWindow extends JFrame {
         }
     }
 
-    public void loadShortJsonData(){
-        this.jsonDroneData = droneData.fetchJsonData("ENDPOINT_DRONES", 5);
-        this.jsonDroneDynamics = droneData.fetchJsonData("ENDPOINT_DRONEDYNAMICS", 5);
-        this.jsonDroneTypes = droneData.fetchJsonData("ENDPOINT_DRONETYPES", 5);
-    }
-    public void loadData(){
-        this.jsonDroneData = droneData.fetchJsonData("ENDPOINT_DRONES");
-        this.jsonDroneDynamics = droneData.fetchJsonData("ENDPOINT_DRONEDYNAMICS");
-        this.jsonDroneTypes = droneData.fetchJsonData("ENDPOINT_DRONETYPES");
+
+    public void loadData() {
+        this.jsonDroneData = droneData.fetchJsonData("ENDPOINT_DRONES", pageLimit);
+        this.jsonDroneDynamics = droneData.fetchJsonData("ENDPOINT_DRONEDYNAMICS", pageLimit);
+        this.jsonDroneTypes = droneData.fetchJsonData("ENDPOINT_DRONETYPES", pageLimit);
+        this.pageLimit += 50;
     }
 
     public void updateUI() {
@@ -168,25 +166,28 @@ public class MainWindow extends JFrame {
         setContentPane(contentPane);
         contentPane.revalidate();
         contentPane.repaint();
-
-        //test System.out.println("change window");
     }
 
-    private boolean checkEnvFileExistence(){
+    private boolean checkEnvFileExistence() {
         File envFile = new File(".env");
         return envFile.exists();
     }
 
-    class UpdateUIThread implements Runnable {
+    private void runUIThread() {
+        UpdateUIRunnable updateUIRunnable = new UpdateUIRunnable();
+        Thread updateUIThread = new Thread(updateUIRunnable);
+        updateUIThread.start();
+    }
+
+    class UpdateUIRunnable implements Runnable {
         @Override
         public void run() {
-            while(true){
-                try{
-//                    Thread.sleep(60000);
-                    Thread.sleep(5000);
+            while (true) {
+                try {
+                    Thread.sleep(60000);
                     loadData();
                     updateUI();
-                } catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
